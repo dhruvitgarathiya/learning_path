@@ -1,0 +1,114 @@
+Problem Statement: normlize this
+
+CREATE TABLE student_courses (
+    student_id INT,
+    student_name VARCHAR(100),
+    student_email VARCHAR(100),
+    student_phone VARCHAR(15),
+    course_id INT,
+    course_name VARCHAR(100),
+    instructor_name VARCHAR(100),
+    instructor_email VARCHAR(100),    
+    enrollment_date DATE,
+    grade VARCHAR(2)
+);
+
+INSERT INTO student_courses VALUES
+(1, 'John Doe', 'john@email.com', '555-0101', 101, 'Math 101', 'Dr. Smith', 'smith@college.edu', '2024-01-15', 'A'),
+(1, 'John Doe', 'john@email.com', '555-0101', 102, 'Physics 101', 'Dr. Johnson', 'johnson@college.edu', '2024-01-15', 'B'),
+(2, 'Jane Smith', 'jane@email.com', '555-0102', 101, 'Math 101', 'Dr. Smith', 'smith@college.edu', '2024-01-16', 'A'),
+(2, 'Jane Smith', 'jane@email.com', '555-0102', 103, 'Chemistry', 'Dr. Brown', 'brown@college.edu', '2024-01-16', 'B+'),
+(3, 'Bob Wilson', 'bob@email.com', '555-0103', 102, 'Physics 101', 'Dr. Johnson', 'johnson@college.edu', '2024-01-17', 'C'),
+(4, 'Alice Green', 'alice@email.com', '555-0104', 101, 'Math 101', 'Dr. Smith', 'smith@college.edu', '2024-01-18', 'A-'),
+(4, 'Alice Green', 'alice@email.com', '555-0104', 104, 'History 101', 'Dr. White', 'white@college.edu', '2024-01-18', 'B'),
+(5, 'Mike Brown', 'mike@email.com', '555-0105', 103, 'Chemistry', 'Dr. Brown', 'brown@college.edu', '2024-01-19', 'B+'),
+(5, 'Mike Brown', 'mike@email.com', '555-0105', 104, 'History 101', 'Dr. White', 'white@college.edu', '2024-01-19', 'A');
+
+
+Start of solution :
+
+ CREATE TABLE student(
+ student_id INT PRIMARY KEY,
+ student_name VARCHAR(100)
+ );
+
+ CREATE TABLE student_email(
+ student_email VARCHAR(100),
+ student_id INT,
+ PRIMARY KEY(student_id,student_email),
+ CONSTRAINT FK_student FOREIGN KEY (student_id)
+REFERENCES student(student_id)
+ );
+
+ CREATE TABLE student_phone_number(
+ student_phone VARCHAR(100),
+ student_id INT,
+ PRIMARY KEY(student_id,student_phone),
+CONSTRAINT FK_student FOREIGN KEY (student_id)
+REFERENCES student(student_id)
+ );
+
+ CREATE TABLE course(
+ course_id INT PRIMARY KEY,
+ course_name VARCHAR(100),
+ instructor_name VARCHAR(100),
+ instructor_email VARCHAR(100)
+ );
+
+CREATE TABLE student_courses_mapped(
+
+ student_id INT,
+ course_id INT,
+ enrollment_date DATE,
+ grade VARCHAR(2),
+ PRIMARY KEY(student_id,course_id),
+CONSTRAINT FK_course FOREIGN KEY (course_id)
+REFERENCES courses(course_id),
+CONSTRAINT FK_student FOREIGN KEY (student_id)
+REFERENCES student(student_id)
+ );
+
+
+INSERT INTO student VALUES
+(1, 'John Doe'),
+(2, 'Jane Smith'),
+(3, 'Bob Wilson');
+
+
+INSERT INTO student_email VALUES
+('john@email.com',1),
+('jane@email.com',2),
+('bob@email.com',3);
+
+INSERT INTO student_phone_number VALUES
+('555-0101',1),
+('555-0102',2),
+('555-0103',3);
+
+INSERT INTO course VALUES
+(101, 'Math 101','Dr. Smith', 'smith@college.edu'),
+(102, 'Physics 101','Dr. Johnson', 'johnson@college.edu'),
+(103, 'Chemistry','Dr. Brown', 'brown@college.edu');
+
+INSERT INTO student_course_mapped VALUES
+(1,101,'2024-01-15', 'A'),
+(1,102,'2024-01-15', 'B'),
+(2,101,'2024-01-16', 'A')),
+(2,103,'2024-01-16', 'B+'),
+(3,102,'2024-01-17', 'C'),
+(3,101,'2024-01-18', 'A-');
+
+
+SELECT s.student_id, s.student_name, s.student_email, s.student_phone_number, c.course_id, c.course_name, c.instructor_name, c.instructor_email, scm.enrollment_date, scm.grade
+FROM student AS s
+JOIN student_email AS se
+ON (s.student_id = se.student_id)
+
+JOIN student_phone_number AS sp
+ON (se.student_id = sp.student_id)
+
+JOIN student_course_mapped AS scm
+ON (sp.student_id = scm.student_id)
+
+JOIN course AS c
+ON (scm.course_id = c.course_id);
