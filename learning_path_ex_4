@@ -1,0 +1,69 @@
+Tables:
+
+departments
+employees
+
+
+solution: 
+
+A. 
+1)relationship between two tables - one to many cause one department can have many employees but an employee can works for one department
+2)https://app.creately.com/d/1vhNwXvGrl7/edit
+
+
+B. 
+ CREATE TABLE department(
+ department_id INT PRIMARY KEY,
+ department_name VARCHAR(100),
+ location VARCHAR,
+);
+
+CREATE TABLE employees(
+employee_id INT PRIMARY KEY,
+name VARCHAR(100),
+age INT,
+address VARCHAR(500),
+phone_number VARCHAR(100),
+email VARCHAR(100),
+blood_group VARCHAR(2),
+department_id INT,
+emplyment_date DATE,
+is_created DATE,
+is_modified DATE,
+is_deleted DATE,
+salary INT
+
+CONSTRAINT FK_department FOREIGN KEY (department_id)
+REFERENCES department(department_id)
+
+);
+
+C.
+
+INSERT INTO departments VALUES 
+(1, 'sales', '2nd floor'),
+(2,'HR', '3rd floor'),
+(3,'marketing','ground floor');
+
+INSERT INTO employees VALUES 
+(101, 'dhruvit', '21','new shakti soceity, rajkot','33333333333','example1@gmail.com','A+',1,'2025-10-10','2025-10-10,'2025-10-10',NULL,30000),
+(102, 'meet', '22','borivali ,mumbai','222222222222','example2@gmail.com','A-','2025-10-11',2,'2025-10-11','2025-10-11',NULL,25000),
+(103, 'raj', '23','france, paris','11111111111111','example3@gmail.com','A+','2025-10-12',1,'2025-10-12','2025-10-12',NULL,35000),
+(104, 'het', '20','hinjewadi, pune','555555555555','example4@gmail.com','B+','2025-10-13',2,'2025-10-13','2025-10-13',NULL,20000),
+(105, 'preet', '24','gota, ahemdabad','666666666','example5@gmail.com','o-','2025-10-14',1,'2025-10-14','2025-10-14',NULL,15000);
+
+queries:
+
+1) SELECT employees.name , department.department_name FROM employees JOIN departments ON (employees.department_id = department.department_id);
+
+2) SELECT department_id , count(employee_id) AS total_employees FROM employees GROUP BY department_id;
+
+3) SELECT employees.name FROM employees JOIN department ON (employee.department_id = department.department_id) WHERE department.department_name IN ('HR','sales');
+
+4)SELECT employees.name FROM employees WHERE employment_date > '2023-10-10';
+
+5) SELECT employees.name , employee.salary FROM employess ORDER BY employee.salary DESC;
+
+6) SELECT department.department_name FROM department LEFT JOIN employee ON (department.department_id = employees.department_id) GROUP BY department.department_id HAVING COUNT(employees.employee_id) = 0;
+
+7) SELECT employees.name FROM employees WHERE name = 'a%';
