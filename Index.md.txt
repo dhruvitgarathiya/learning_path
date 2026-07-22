@@ -1,0 +1,98 @@
+#  Learning Repository Index
+
+---
+
+##  Repository Structure
+
+```text
+.
++-- Java_Theory/
+¦
++-- MongoDB_Theory/
+¦   +-- mongodb.md
+¦
++-- PostgreSql_Excersice/
+¦   +-- learning_path_ex_2
+¦   +-- learning_path_ex_4
+¦   +-- resturant_management.md
+¦   +-- user_management.md
+¦
++-- PostgreSql_Theory/
+    +-- constraints+index.md
+    +-- function_stored_procedure.md
+    +-- hospital_management_system.md
+    +-- jsob.md
+    +-- normalization.md
+    +-- postgresql-2.md
+    +-- postgresql-3.md
+    +-- postgrsql_basic
+    +-- triggers_cursor.md
+    +-- views+transactions.md
+    +-- window_func.md
+```
+
+---
+
+# ?? Contents
+
+## ? Java Theory
+
+- Java concepts and notes.
+
+---
+
+## ?? MongoDB Theory
+
+| File | Description |
+|------|-------------|
+| `mongodb.md` | MongoDB notes, CRUD operations, aggregation, indexing, and concepts. |
+
+---
+
+## ?? PostgreSQL Exercises
+
+| File | Description |
+|------|-------------|
+| `learning_path_ex_2` | PostgreSQL practice exercises (Part 2). |
+| `learning_path_ex_4` | PostgreSQL practice exercises (Part 4). |
+| `resturant_management.md` | Restaurant Management System database exercises. |
+| `user_management.md` | User Management System database exercises. |
+
+---
+
+## ?? PostgreSQL Theory
+
+| File | Description |
+|------|-------------|
+| `postgrsql_basic` | PostgreSQL basics and introduction. |
+| `postgresql-2.md` | Intermediate PostgreSQL concepts. |
+| `postgresql-3.md` | Advanced PostgreSQL concepts. |
+| `normalization.md` | Database normalization (1NF to BCNF). |
+| `constraints+index.md` | Constraints and indexing. |
+| `views+transactions.md` | Views and transaction management. |
+| `window_func.md` | Window functions with examples. |
+| `function_stored_procedure.md` | Functions and stored procedures. |
+| `triggers_cursor.md` | Triggers and cursors. |
+| `jsob.md` | JSON/JSONB data types and operations. |
+| `hospital_management_system.md` | Complete Hospital Management System database design. |
+
+---
+
+## ?? Topics Covered
+
+- PostgreSQL
+- MongoDB
+- Java
+- Database Design
+- Normalization
+- Constraints
+- Indexing
+- Views
+- Transactions
+- Window Functions
+- Functions
+- Stored Procedures
+- Triggers
+- Cursors
+- JSONB
+- Practical Database Exercises
