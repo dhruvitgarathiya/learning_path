@@ -7,16 +7,16 @@
 ```text
 .
 +-- Java_Theory/
-¦
+Â¦
 +-- MongoDB_Theory/
-¦   +-- mongodb.md
-¦
+Â¦   +-- mongodb.md
+Â¦
 +-- PostgreSql_Excersice/
-¦   +-- learning_path_ex_2
-¦   +-- learning_path_ex_4
-¦   +-- resturant_management.md
-¦   +-- user_management.md
-¦
+Â¦   +-- learning_path_ex_2
+Â¦   +-- learning_path_ex_4
+Â¦   +-- resturant_management.md
+Â¦   +-- user_management.md
+Â¦
 +-- PostgreSql_Theory/
     +-- constraints+index.md
     +-- function_stored_procedure.md
