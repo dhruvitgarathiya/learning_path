@@ -3,7 +3,7 @@ import java.time.LocalDate;
 
 import Payment_System.Enums.SubscriptionStatus;
 
-public class PaymentGatway {
+public abstract class PaymentGatway {
 
     // parmeters
 
@@ -17,7 +17,9 @@ public class PaymentGatway {
 
     private SubscriptionStatus status;
 
+
     // constructor
+
 
     protected PaymentGatway(String gatewayName, double subscriptionAmount){
 
@@ -27,6 +29,7 @@ public class PaymentGatway {
 
         this.status  = SubscriptionStatus.INACTIVE;
     }
+
 
 
     // getters
@@ -50,6 +53,8 @@ public class PaymentGatway {
     public SubscriptionStatus getStatus() {
         return status;
     }
+
+
 
     // setters
 

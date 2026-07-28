@@ -9,7 +9,7 @@ import Payment_System.interfaces.SubscriptionService;
  * Notice this class depends on
  * an interface instead of concrete classes.
  */
-public class PaymentManager {
+public class PaymentManager{
 
     /**
      * Starts subscription.

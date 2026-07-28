@@ -1,133 +1,76 @@
+package Payment_System.Classes_;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import Payment_System.Enums.SubscriptionStatus;
 import Payment_System.interfaces.SubscriptionService;
 
-/**
- * Concrete implementation of Razorpay.
- *
- * Inherits all common state from PaymentGateway
- * and provides its own implementation for
- * subscription operations.
- */
-public class Razorpay extends PaymentGatway
-implements SubscriptionService {
+public class Razorpay extends PaymentGatway implements SubscriptionService {
 
-    /* -------------------------------
-       Razorpay Specific State
-       ------------------------------- */
+    // razorpay specific parameters
 
-    private String merchantId;
+    private int merchentId;
 
-    private String apiKey;
+    private String APIkey;
 
-    /* -------------------------------
-       Constructor
-       ------------------------------- */
 
-    public Razorpay(String merchantId,
-                    String apiKey,
-                    BigDecimal subscriptionAmount) {
+    // constructor
 
-        super();
+    public Razorpay(String GatewayName, int merchentId, String APIkey, double SubscriptionAmount){
+        
+        super(GatewayName, SubscriptionAmount);
 
-        this.merchantId = merchantId;
-        this.apiKey = apiKey;
+        this.merchentId = merchentId;
+
+        this.APIkey = APIkey;
+        
     }
 
-    /* -------------------------------
-       Interface Implementation
-       ------------------------------- */
+    // Interface implementation
 
     @Override
-    public void startSubscription() {
+    public void startSubscription(){
 
         setSubscriptionStartDate(LocalDate.now());
 
         setStatus(SubscriptionStatus.ACTIVE);
 
-        System.out.println(
-                getGatewayName() +
-                " subscription started.");
-
+        System.out.println("Subscription of"+ getGatewayName() + "have been started today");
     }
+    
+    @Override
+    public void endSubscription(){
+        setSubscriptionEndDate(LocalDate.now());
 
-    private void setStatus(SubscriptionStatus active) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setStatus'");
-    }
+        setStatus(SubscriptionStatus.INACTIVE);
 
-    private void setSubscriptionStartDate(LocalDate now) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setSubscriptionStartDate'");
+        System.out.println("Subscription of"+ getGatewayName() +"have been ended today");
     }
 
     @Override
-    public void endSubscription() {
+    public void changeSubscriptionAmount(double NewAmount){
 
-        setSubscriptionStartDate(LocalDate.now());
-
-        setStatus(SubscriptionStatus.CANCELED);
-
-        System.out.println(
-                getGatewayName() +
-                " subscription ended.");
-
-    }
-
-    private String getGatewayName() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getGatewayName'");
-    }
-
-    @Override
-    public void changeSubscriptionAmount1(double newAmount) {
-
-        if (newAmount <= 0) {
-
-            throw new IllegalArgumentException(
-                    "Amount must be greater than zero.");
+        if(NewAmount <= 0){
+            System.err.println("Enter valid subscription amount");
         }
 
-        changeSubscriptionAmount(newAmount);
+        setSubscriptionAmount(NewAmount);
 
-        System.out.println(
-                "Subscription updated to $" +
-                newAmount);
+        System.out.println("Subscription amount changed");
 
     }
 
-    /* -------------------------------
-       Razorpay Specific Methods
-       ------------------------------- */
+    // razorpay specific methods
 
-    public void generateApiToken() {
+    // getter methods for the razorpay
 
-        System.out.println(
-                "Generating Razorpay API Token...");
-
+    public int getMerchentId(){
+        return merchentId;
     }
 
-    public String getMerchantId() {
-        return merchantId;
+    public String getAPIKey(){
+        return APIkey;
     }
 
-    public String getApiKey() {
-        return apiKey;
-    }
-
-    @Override
-    public void changeSubscriptionAmount(double newAmount) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'changeSubscriptionAmount'");
-    }
-
-    @Override
-    public void changeSubscriptionAmount(BigDecimal newAmount) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'changeSubscriptionAmount'");
-    }
 
 }
