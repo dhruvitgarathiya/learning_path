@@ -1,4 +1,3 @@
-package Payment_System.Classes;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -13,8 +12,8 @@ import Payment_System.interfaces.SubscriptionService;
  * and provides its own implementation for
  * subscription operations.
  */
-public class Razorpay extends PaymentGateway
-        implements SubscriptionService {
+public class Razorpay extends PaymentGatway
+implements SubscriptionService {
 
     /* -------------------------------
        Razorpay Specific State

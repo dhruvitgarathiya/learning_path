@@ -120,4 +120,3 @@ old java doesnt allow to make static  method or static var inside the inner clas
 for some work that is too small or only one time thing - dont need to make new class can declare class in main function it self that is called class without name
 
 we cannot make constructors in this
- 
