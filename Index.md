@@ -6,8 +6,18 @@
 
 ```text
 .
++-- Java_practise/
+¦   +-- Payment_gatway
 +-- Java_Theory/
-¦
+¦   +-- Java_1
+¦   +-- Java_2
+¦   +-- Java_3
+¦   +-- Java_4
+¦   +-- Java_5
+¦   +-- Java_6
+¦   +-- Java_7
+¦   +-- Java_8
+¦   +-- Java_9
 +-- MongoDB_Theory/
 ¦   +-- mongodb.md
 ¦
@@ -33,15 +43,25 @@
 
 ---
 
-# ?? Contents
+#  Contents
 
-## ? Java Theory
+##  Java Theory
 
-- Java concepts and notes.
+| File | Description |
+|------|-------------|
+| `Java_1` | Introduction , protability , slowness  |
+| `Java_2` | Jvm , jre , jdk   |
+| `Java_3` | operators how they works|
+| `Java_4` | Functions |
+| `Java_5` | oop, incapsulation , abstraction |
+| `Java_6` | interface, polymorphism, autoboxing  |
+| `Java_7` | i/o , object class |
+| `Java_8` | object class methods  |
+| `Java_9` | interface deep dive  |
 
 ---
 
-## ?? MongoDB Theory
+##  MongoDB Theory
 
 | File | Description |
 |------|-------------|
@@ -49,7 +69,7 @@
 
 ---
 
-## ?? PostgreSQL Exercises
+##  PostgreSQL Exercises
 
 | File | Description |
 |------|-------------|
@@ -60,7 +80,7 @@
 
 ---
 
-## ?? PostgreSQL Theory
+##  PostgreSQL Theory
 
 | File | Description |
 |------|-------------|
@@ -78,7 +98,7 @@
 
 ---
 
-## ?? Topics Covered
+##  Topics Covered
 
 - PostgreSQL
 - MongoDB

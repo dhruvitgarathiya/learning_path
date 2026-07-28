@@ -3,6 +3,7 @@ package Payment_System.Services;
 
 import Payment_System.interfaces.SubscriptionService;
 
+
 /**
  * Handles subscription operations.
  *
@@ -39,5 +40,8 @@ public class PaymentManager{
         gateway.changeSubscriptionAmount(amount);
 
     }
+
+    
+    
 
 }

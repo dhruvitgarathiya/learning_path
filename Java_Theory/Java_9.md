@@ -1,100 +1,90 @@
-object class
+interface deep dive
 
-java.lang (system) package contain this class
+interface defines what object can do without saying how it do it
 
-there are command behaviours which we need in all class
+class is bleuprint of object but interface is blueprint of behaviour
 
-object can instanticate any class cause it is parent of all class this is beacuse of polymorphism
+method we write in interface will be by default public
 
-core methods:  
-
-tostring()
-equal()
-hashcode()
-getclass()
-
-clone()
-
-finalize()
+so when implementing it in object you cannot narrow down it you can only widen it
 
 
-### tostring()
+// variable inside interfaces
 
-convert anything to string
+we can define variables 
 
-### equals()
+//
 
-compares to references
+we can define methods in interface body by default modifier 
 
-### hashcode()
-
-return an integer of an object
-
-integer- hexadecimal number
-
-rule : if two objects are equal there hash must be equal
-
-so if equals is true then hashcode must be same but reverse might not be true
-
-### getclass()
-
-return runtime class of an object
-
-java have class name Class 
-
-this method return Class type object
-
-### clone
-
-create copy of an object
-
-protected type method
-
-throws exception - class not supported
-
-not every object should be cloneable
-
-database threads
-
-every class which want to be clone should implement clonable interface
-
-clonable interface is marker interface
-which means interface is empty
+ 
+ 
+* if an class is exteding other class also implementing the interface and both have same method with same name then class will given priority.
 
 
-this function does shallow copy
+so now after java 8 we can have defualt, static, private methods and also static and final variables then how it is different from abstract class now
 
 
-* arrays are not primitive data type
+the biggest gap is intention
 
-so it also have parent class object so we can implement array methods from objects
+interface - contract , roles /  functionalities
 
-* but int char float are primitive so it dont have object class as parent
-
-## enum
-
-we can create simple  variable for the purpose of solving the problem which can be solved by the enum
+ex. ruunable , walkable, playable
 
 
-but that approach have it's problems:
+abstract class - families or similar class
 
-1. type safety
-2. poor readability
-3. no grouping of related entities
+ex. animal , dog , duck..
 
+we represent abstract class as is-a relationship
 
-enumerative type
-
-predefined constants
+interface as can-do relationship
 
 
-* each enum is class
-* extends enum class
-* each constants are static and final object of type of that enum class
+syntax wise difference 
+
+interface cannot have normal fields
+
+abstract class can have normal fields
+
+interface does not have constructors
+
+abstract class can have 
+
+interface multiple inheritance
+
+interface bydefualt public methods
+
+abstract class allow all
 
 
-(((static variable a re not stored in stack but they reside in a seprate memory area called metaspace.)))
+### functional interfaces
 
-we can make variables of the enums cuase it's class at the end
+if interface have only one methods then it is
 
-  
+it unlocks the functional programming 
+
+with lambda expressions
+
+we already have in built interface like comprabale predicate
+
+### marker interface
+
+
+empty interface
+
+*  interface clonable
+* interface serializable
+* interface randomaccess
+
+
+
+
+interface also after compilation becoms an class
+
+everything in java becomes an class after gettinn into compilation 
+
+in compilation it will attach an tag of acc_interface in class so compiler knows that it have charctertics of interface
+
+
+

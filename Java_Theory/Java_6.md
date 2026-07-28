@@ -1,205 +1,122 @@
-# object oriented programming
+# interface
 
-this is a way of writing code. java is object oriented programming language
+interface does not have any relation with object, it's syntax may seem like class
 
-to solve real world problem , you have to mimic real world
+but it represent it self as contract
 
-we can attach the charcterisitc and interincsitc properties to an single entity
+generally we dont define any methods in interface 
+we just declare them
+we define them in child class
 
-this is called object oriented programming
+so this is pure abstraction
 
-let there a human , he is student , son and employee 
+like which child class implement the interface it has to define all the methods defined in interface that's why it is contract
 
-his charcterisitc depends on role he is playing
+# polymorphysm
 
-but programming we can not represent whole hireachy
+static methods cannot be override
 
-we use the only variables we concerned.
+beacuse they belong to class and not to objects
 
-every object is created in heap memory
+private methods cant be overriden
+final methods cannot be oveeriden
 
-object's location (which is stored as variable) is stored in stack memory
+fields and variale they cannot be polymorphic
 
-so it is called reference varibal which refers to an object's address
+to override varibale just make getter methods
 
-mew keyword's memory allocation is done in runtime
+final class cannot be inherited 
 
-so it is called as dynamic memory allocation
+# why java have only one public class per file why name of that class should be same as filename
 
-so object is being made in runtime
+jvm can know that which class have main method
 
-instance baribale (varible of object) holds a default values
+jvm can acess file that's why it is public and name is same so jvm can load file directly without confusion
 
-int - 0
-float - 0.0
-boolean - flase
-string - null
+by that logic our project can have multiple files so each file can have one public class and main method then how can jvm know which method to execute
 
-local variable dont have defualt value
+asnwer is jvm know it cause we will run that file only to start compiling the code
 
-cause instance varibale are stored in heap have  broader scope
 
-and local varibale are stored in stack and have limited scope till function 
+# autoboxing / unboxing
 
-so java try to optimize itself
 
+every primitive data type have the non primitve classes for it's packages 
 
-**rules of constructor**
+so their class can also have objects like example int have package non primitive class called Integer then we can make object of it
 
-same name as class
+then how it is different from the int data type
 
+answer is int data type which is primitve data type stors in stack where as non primitive Integer class's object is being stored in heap memory
 
-no return type not even void
+why wrapper classes exsits
 
-automatically called doing object creation
+cus there are so many things like collection framework they deal with classes and objects so they cannot work with primitve data type
 
-used to intializing an object
+and we want so many methods and classes for many operations
 
-it can be overloaded
+then why primitive exists
 
+first reason is legacy code , every language have primitve and that continituy cannot be broke
 
+main reason is primitve data type is fast. cause class and object need much space and take time to store
 
-so when we write the 
 
-student s1 = new **Student()**;
+then what is autoboxing 
 
+anything declared in primitive int and assign the non primitive class then it will automatically being converted in non primitive class
 
-so the highlighted part we wrote for calling the constructor
+java use ValueOf method to convert the data type to object
 
-if you haven't made constructor then java make constructor by itself.
+and unoxing is vice versa we can assing th primitive data type to non primitve class
 
-parameterized constructor:
+ where all this autboxing and unbocing appllied
 
-every value of parameter in object creation to be filled mandatory.
+ 1. assignment
+ 2. method calls
+ 3. arithmatic operations
 
-**this keyword**
 
-this stores current object's reference.
+case of null :
+object can store null but primitive data type cannot so in that case it gives error
 
+case of comparison :
+when comapring the two non primitive int class with same value 
+Intger a = 200.
+Integr b = 200.
 
+a == b will give false
 
+a and b are refernece address of object which are different so it will give false.
 
-Constructor chaining -
+but int will give the true it is comparing the value.
 
-we can call the other constructor by using one constructor using this keyword.
 
-we cannot call constrcutor manually
+## pojo classes
 
+plain old java objects
 
-some time while creating object at run time in heap , our heap memory is full so we can't get space in heap
 
 
-at that time we get the runtime exception of not enough space in heap
+## static nested class 
 
+1. does not need an instance of outer class
+2. class can be intiated like normal class
+3. can access only static members of outer class
+4. can acess non static members by having a reference of outer class
+5. it is just like normal class & can do anything an outer class does
 
-**memory thing in objects**
 
-our refence varibale of object is stored in stack which takes 4 to 8 bytes generally
-as other varibles
+## nested class 
 
+innner class's object being created with the refernece of outer class
 
-but our object is stored in heap as it consist of all the varibales like name , age... are total n then we assume object should take 4n or (4(some n) + 8(some n))
+inner class can access any method and variable of outer class
 
-but this is not how it is being stored
+old java doesnt allow to make static  method or static var inside the inner class but java 16 solved this
 
+## class without name
 
-three things which are being considered while stroing an object
+for some work that is too small or only one time thing - dont need to make new class can declare class in main function it self that is called class without name
 
-1. header size
-2. excat fields
-3. padding
-
-header stores metadata of objects
-like markword - info about logs, synchronization, garbadge colleciton
-this take 8 bytes
-
-and like markwords it also stores the class pointers which takes 4/8 byts
-
-padding - is optional ,
-we beileve in java that if any thing is being stored in java should be stored in multiple of 8 bytes cause when cpu takes data to process it takes in the chunck of the 8 bytes
-
-so this same applies to the object memory allocation
-
-so padding try to make the object storing to make it 8 bytes multiple
-
-
-### call by value
-
-java only have concept of call by value 
-there no thing such as call by refernce in java
-
-but we have something like that works like call by reference but it is actually call by values
-
-
-when dealing with objects when we try to change the value of object by passing it to different mathod with different varibale name
-
-but at the end it is an referntial varibale pointing to same object . so it will copy the address from the class object and apply the method and give the result.
-
-**static keywords**
-
-if some values are gonna be static for the rest of the entries than it will be declared as static keyowrds
-
-they are not stored in head 
-
-
-methods and variables can be static
-
-one static method can only call other static method
-
-
-static method can only store static variables
-
-
-static method does not have access to this keyword
-
- parameter can not be static cause it is used and dumped in local scope 
- 
- 
- root level class cannot be static but nested class can be
- 
- 
- final keyword to define and finlize the value of variable at once like PI.
- 
- it can be applied to variable, method, class, parameter
- 
- 
-**why main is static in java?**
- 
- if main was not static java have to make object of it to intlize.
- 
- so main is static , we make to make every method in main static
- 
- we can make static final togather
- 
- 
- ## encapsulation
- 
- 
- both data and behaviour should be encapsulated on object
- 
- we should not provide unrestricated access of data
- 
- we should not give permission to anyone to make object of our class
- 
- access modifier
- 
-1. public
-2. dufualt
-3. protected
-4. private
-
-
-
-make data private and give their access to anyone by bahavbiour methos
-
-remember the example of the balance
-
-
-### high level abstraction
-
-seprating what from how
-
-when object is tighly coupled with concert classes.v  
-
- 
- 
+we cannot make constructors in this

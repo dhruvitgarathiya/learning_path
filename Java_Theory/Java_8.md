@@ -1,86 +1,100 @@
-## input / output
+object class
 
-types of ip and op:
+java.lang (system) package contain this class
 
-1. console i/o
-2. file
-3. network
-4. memory
+there are command behaviours which we need in all class
 
-**console i/o**
+object can instanticate any class cause it is parent of all class this is beacuse of polymorphism
 
-by system.out.println("helo");
+core methods:  
 
-here by our knowldge of oops we can say that println is some object's method which are we calling
+tostring()
+equal()
+hashcode()
+getclass()
 
-here out is reference variable of that object 
+clone()
 
-and System's s is capital so it is clss
-
-we are using the object directly from class which means it is an static class
-
-so by this we can have broad idea of this system 
-
-System.err -> can use for showing error
-
-### input
-
-inputStream type's variable in
-
-we can call it by System.in
+finalize()
 
 
-Inputstream (abstract)-> read
+### tostring()
 
-fileinputstream 
-byteinputstream
-bufferinputstream
-datainputstream
+convert anything to string
 
-outputstream(abstract) -> write
+### equals()
 
-fileoutputstream
-bytearryoutputstream
-bufferputputstream
-printstream
+compares to references
 
- read() method reads one byte at a time
- 
- 
-and input stream take byte stream one by one and covnert it to char stream
+### hashcode()
 
-so to solve we use java buffer's function buffer stream
+return an integer of an object
 
-buffer stream will give byte stream all togather and input stream than change this to char stream
+integer- hexadecimal number
 
-it have limitations 
+rule : if two objects are equal there hash must be equal
 
-like it take 2 step to take numbers as input
+so if equals is true then hashcode must be same but reverse might not be true
 
-scanner class is slow than buffer read
+### getclass()
 
-## immutable class
+return runtime class of an object
 
-rules 
+java have class name Class 
 
-mark class as final
+this method return Class type object
 
-mark variable as private and final
+### clone
 
-no setters
+create copy of an object
 
-but we can make shallow copy of the object and than pass it to class as variable , then we can set them despite being immutable class
+protected type method
 
-so now to remove this drawback also we use defencive copy of that object in our class
+throws exception - class not supported
 
-so it have fixed value assoicated with class , so we can not change the real object
+not every object should be cloneable
+
+database threads
+
+every class which want to be clone should implement clonable interface
+
+clonable interface is marker interface
+which means interface is empty
 
 
-
-## object class
-
-this is parent class of all the class we use
-
-every class inherit from it.
+this function does shallow copy
 
 
+* arrays are not primitive data type
+
+so it also have parent class object so we can implement array methods from objects
+
+* but int char float are primitive so it dont have object class as parent
+
+## enum
+
+we can create simple  variable for the purpose of solving the problem which can be solved by the enum
+
+
+but that approach have it's problems:
+
+1. type safety
+2. poor readability
+3. no grouping of related entities
+
+
+enumerative type
+
+predefined constants
+
+
+* each enum is class
+* extends enum class
+* each constants are static and final object of type of that enum class
+
+
+(((static variable a re not stored in stack but they reside in a seprate memory area called metaspace.)))
+
+we can make variables of the enums cuase it's class at the end
+
+  
