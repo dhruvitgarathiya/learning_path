@@ -2,17 +2,18 @@ package Food_delivery_System.Classes_;
 
 import java.util.UUID;
 
-public class Customer {
+
+public class Customer{
     
     //parameters
 
     private UUID id;
     private String name;
-    private Number walletBalance;
+    private double walletBalance;
 
     // constructor
 
-    public Customer(UUID id, String name, Number walletBalance){
+    public Customer(UUID id, String name, double walletBalance){
         this.name  = name;
         this.id = UUID.randomUUID();
         this.walletBalance = walletBalance;
@@ -39,8 +40,9 @@ public class Customer {
         return this;
     }
 
-    public Customer setwalletBalance(Number walletBalance){
+    public Customer setwalletBalance(double walletBalance){
         this.walletBalance = walletBalance;
         return this;
-    } 
+    }
+
 }

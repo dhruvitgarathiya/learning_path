@@ -2,43 +2,34 @@ package Food_delivery_System.Classes_;
 
 import java.util.UUID;
 
-public class CartItems {
+
+public class CartItems extends MenuItems  {
     
     // parameters
 
-    private UUID id;
-    private MenuItems item;
-    private Number quantity;
+    private double quantity;
 
     // constructer
 
-    public CartItems(UUID id, MenuItems item, Number quantity ){
-        this.id = UUID.randomUUID();
-        this.item = item;
+    public CartItems(UUID id, double quantity, String name, double price, boolean isAvailble, String category ){
+
+        super(id, name, price, isAvailble,category);
         this.quantity = quantity;
     }
 
     // getters and setters
 
-    public UUID getId(){
-        return this.id;
-    }
 
-    public MenuItems getItem(){
-        return this.item;
-    }
-
-    public Number getQuantity(){
+    public double getQuantity(){
         return this.quantity;
     }
 
-    public CartItems SetItem(MenuItems item){
-        return this;
-    }
 
     public CartItems SetQuantity(Number quantity){
         return this;
     }
+
+   
   
 }
 

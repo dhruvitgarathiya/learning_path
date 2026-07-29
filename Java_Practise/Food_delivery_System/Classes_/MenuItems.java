@@ -8,13 +8,13 @@ public class MenuItems {
 
     private UUID id;
     private String name;
-    private Number price;
+    private double price;
     private boolean isAvailble;
     private String category;
 
-    // constructor
 
-    public MenuItems(UUID id, String name, Number price, boolean isAvailble, String category){
+    // constructor
+    public MenuItems(UUID id, String name, double price, boolean isAvailble, String category){
         this.id = UUID.randomUUID();
         this.name = name;
         this.price = price;
@@ -32,7 +32,7 @@ public class MenuItems {
         return this.name;
     }
 
-    public Number getPrice(){
+    public double getPrice(){
         return this.price;
 
     }
@@ -52,7 +52,7 @@ public class MenuItems {
         return this;
     }
 
-    public MenuItems setPrice(Number price){
+    public MenuItems setPrice(double price){
         this.price = price;
         return this;
     }

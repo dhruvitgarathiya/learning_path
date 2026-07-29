@@ -8,20 +8,45 @@ public class Order {
     // parameters
 
     private UUID orderId;
-    private CartItems items;
-    private Number total_amount;
+    private Cart CartSummery;
+    private double total_amount;
     private OrderStatus status ;
 
     // constructor
 
-    public Order(UUID orderId, CartItems items, Number total_amount,OrderStatus status){
+    public Order(UUID orderId, Cart CartSummery, double total_amount,OrderStatus status){
         this.orderId = orderId;
-        this.items = items;
+        this.CartSummery = CartSummery;
         this.status = status;
         this.total_amount = total_amount;
     }
 
-    // 
+    //methods
+    
+    public UUID getOrderId(){
+        return this.orderId;
+    }
+
+    public OrderStatus getOrderStatus(){
+        return this.status;
+    }
+
+    public double getTotalAmount(){
+        return this.total_amount;
+    }
+
+    public Order setOrderStatus(OrderStatus status){
+        this.status = status;
+        return this;
+    }
+
+    public Order setOrderTotalAmount(double amount){
+        this.total_amount = amount;
+        return this;
+    }
+
+   
+    
 
     
     
