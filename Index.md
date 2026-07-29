@@ -8,6 +8,7 @@
 .
 +-- Java_practise/
 ¦   +-- Payment_gatway
+¦   +-- Food_delivery
 +-- Java_Theory/
 ¦   +-- Java_1
 ¦   +-- Java_2
@@ -18,6 +19,9 @@
 ¦   +-- Java_7
 ¦   +-- Java_8
 ¦   +-- Java_9
+¦   +-- Java_10
+¦   +-- Java_11
+¦   +-- Java_12
 +-- MongoDB_Theory/
 ¦   +-- mongodb.md
 ¦
@@ -58,6 +62,9 @@
 | `Java_7` | i/o , object class |
 | `Java_8` | object class methods  |
 | `Java_9` | interface deep dive  |
+| `Java_10` | String , String class, Stringbuilder/stringbuffer |
+| `Java_11` | generics, wildecards, generic methods, type erasor  |
+| `Java_12` | collection framework, iterable interface  |
 
 ---
 
