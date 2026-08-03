@@ -46,13 +46,3 @@ it gives us power of iterating in same list with unlimited position variables an
 in java we have collection interface and we also have collections class which is utility class
 
 
-some basci operation which we can do in collection , that we can implement in other child class
-
-collection - interface
-collections - utility class
-
-
-
-
-
-

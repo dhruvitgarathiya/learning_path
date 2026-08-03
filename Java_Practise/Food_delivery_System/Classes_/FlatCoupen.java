@@ -25,7 +25,7 @@ public class FlatCoupen extends Coupen implements CoupenFunctions<Double, Double
             return 0.0;
     }
 
-
+    
 
     
     

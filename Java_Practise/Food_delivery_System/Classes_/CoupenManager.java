@@ -7,11 +7,11 @@ import Food_delivery_System.Interfaces.CoupenHandler;
 
 public class CoupenManager implements CoupenHandler {
     
-    private final Map<MenuItems, Coupen> CoupenEligibility = new HashMap<>();
+    private final Map<Coupen, MenuItems> CoupenEligibility = new HashMap<>();
     @Override
     public void registerCoupen(Restaurant r, Coupen bg, MenuItems mi){
 
-            CoupenEligibility.put(mi,bg);
+            CoupenEligibility.put(bg, mi);
 
     }
     @Override
@@ -22,9 +22,9 @@ public class CoupenManager implements CoupenHandler {
             // coupen dont exists
         }
 
-        for(Map.Entry<MenuItems, Coupen> entry : CoupenEligibility.entrySet()){
-            if(entry.getKey() == m){
-                if(entry.getValue() == bg){
+        for(Map.Entry<Coupen, MenuItems> entry : CoupenEligibility.entrySet()){
+            if(entry.getKey() == bg){
+                if(entry.getValue() == m){
                     return true;
                 }
             }
