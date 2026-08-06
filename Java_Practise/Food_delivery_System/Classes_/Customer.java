@@ -2,10 +2,9 @@ package Food_delivery_System.Classes_;
 
 import java.util.UUID;
 
+public class Customer {
 
-public class Customer{
-    
-    //parameters
+    // parameters
 
     private UUID id;
     private String name;
@@ -13,36 +12,35 @@ public class Customer{
 
     // constructor
 
-    public Customer(UUID id, String name, double walletBalance){
-        this.name  = name;
-        this.id = UUID.randomUUID();
+    public Customer(UUID id, String name, double walletBalance) {
+        this.name = name;
+        this.id = (id != null) ? id : UUID.randomUUID();
         this.walletBalance = walletBalance;
     }
 
     // getters and setters
 
-    public UUID getId(){
+    public UUID getId() {
         return this.id;
     }
 
-    public String getName(){
+    public String getName() {
         return this.name;
     }
 
-    public Number getWalletBalance(){
+    public Number getWalletBalance() {
         return this.walletBalance;
     }
 
     // setters
 
-    public Customer setName(String name){
-        this.name  = name;
+    public Customer setName(String name) {
+        this.name = name;
         return this;
     }
 
-    public Customer setwalletBalance(double walletBalance){
+    public Customer setwalletBalance(double walletBalance) {
         this.walletBalance = walletBalance;
         return this;
     }
-
 }

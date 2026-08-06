@@ -1,86 +1,77 @@
 package Food_delivery_System.Classes_;
 
 import java.util.ArrayList;
-
+import java.util.Arrays;
 
 import Food_delivery_System.Interfaces.CoupenHandler;
 
 public class Restaurant {
-    //parameters
-   
-    
+    // parameters
+
     private String name;
     private float rating;
     private boolean isOpen;
-    private ArrayList<MenuItems> menu = new ArrayList<>();
+    private ArrayList<MenuItems> menu;
     private CoupenHandler coupenHandler;
-    
 
     // constructor
 
-    public Restaurant(String name, float rating, boolean isOpen){
+    public Restaurant(String name, float rating, boolean isOpen) {
         this(name, rating, isOpen, null, null);
     }
 
-    public Restaurant(String name, float rating ,boolean isOpen,MenuItems[] menu, CoupenHandler coupenHandler){
-        this.name = name;  
+    public Restaurant(String name, float rating, boolean isOpen, MenuItems[] menu, CoupenHandler coupenHandler) {
+        this.name = name;
         this.rating = rating;
         this.isOpen = isOpen;
-        this.menu = null;
-        this.coupenHandler = coupenHandler;
+        this.menu = (menu != null) ? new ArrayList<>(Arrays.asList(menu)) : new ArrayList<>();
+        this.coupenHandler = (coupenHandler != null) ? coupenHandler : CoupenManager.getInstance();
     }
 
     // getters and setters
 
-     // getters
+    // getters
 
-    
-     public String getName(){
+    public String getName() {
         return this.name;
-     }
+    }
 
-     public Float getRating(){
+    public Float getRating() {
         return this.rating;
-     }
+    }
 
-     public boolean getIsOpen(){
+    public boolean getIsOpen() {
         return this.isOpen;
-     }
+    }
 
-     // setters
+    public ArrayList<MenuItems> getMenu() {
+        return this.menu;
+    }
 
-     public Restaurant setNamw(String name){
-        this.name  = name;
+    // setters
+
+    public Restaurant setNamw(String name) {
+        this.name = name;
         return this;
-     }
+    }
 
-     public Restaurant setRating(float rating){
+    public Restaurant setRating(float rating) {
         this.rating = rating;
         return this;
-     }
+    }
 
-     public Restaurant setIsOpen(boolean isOpen){
+    public Restaurant setIsOpen(boolean isOpen) {
         this.isOpen = isOpen;
         return this;
-     }
+    }
 
-     // methods
+    // methods
 
-     public void addItemToMenu(MenuItems m){
-         this.menu.add(m);
-     }
+    public void addItemToMenu(MenuItems m) {
+        this.menu.add(m);
+    }
 
-     public void createNewCoupen(Coupen c, MenuItems m){
-         coupenHandler.registerCoupen(this, c, m);
-     }
-
-     
-  
-
-
-  
-
-    
-
-    
+    public void createNewCoupen(Coupen c, MenuItems m) {
+        coupenHandler.registerCoupen(this, c, m);
+    }
 }

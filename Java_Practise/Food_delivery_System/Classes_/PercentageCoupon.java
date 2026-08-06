@@ -9,39 +9,35 @@ public class PercentageCoupon extends Coupen implements CoupenFunctions<Double, 
 
     public PercentageCoupon(UUID unique_code, double min_amount, LocalDate expiration_date) {
         super(unique_code, expiration_date, min_amount);
-       
     }
 
-    //parameter
+    // parameter
     private Number percentage;
-
-    
 
     // methods
 
-    public Number getPercentage(){
-       return this.percentage;
+    public Number getPercentage() {
+        return this.percentage;
     }
-    
-    public PercentageCoupon setPercentage(Number percentage){
+
+    public PercentageCoupon setPercentage(Number percentage) {
         this.percentage = percentage;
         return this;
     }
 
     @Override
     public Double calculateDiscount(Double input) {
-        Double p = null;
         double i = input;
-        if(i >= this.getMinamount().doubleValue() ){
-             p =(Double) (input * (this.getPercentage().doubleValue()/100));
+
+        if (i >= this.getMinamount().doubleValue()) {
+            return input * (this.getPercentage().doubleValue() / 100);
         }
 
-        return p;
-
+        return 0.0;
     }
 
-  
-
-    
-
+    @Override
+    public double getDiscountAmount(Cart cart) {
+        return calculateDiscount(cart.getTotal());
+    }
 }
