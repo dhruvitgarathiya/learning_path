@@ -1,49 +1,62 @@
+package Termianl_System;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class TaskManager {
 
-    MemoryStroage ms;
+    Storage st;
 
-    public TaskManager(MemoryStroage ms){
-        this.ms = ms;
+    public TaskManager(Storage st){
+        this.st = st;
     }
+
+    //add task
     
-    public void addTasks(int id, String title, String Description, Priority priority, Status status){
-        Task t = new Task(id, title, Description, priority, status);
-        this.ms.addToList(t);
+    public void addTasks(Task t){
+      List<Task> tasks =  st.load();
+      tasks.add(t);
+      st.save(tasks);
     }
+
+    // delete task
 
     public void deleteTasks(Task t){
-        this.ms.removeFromList(t);
+        List<Task> tasks = st.load();
+        tasks.remove(t);
+        st.save(tasks);
     }
 
-    public Task FindTask(int id){
-       
-        for(Task t:ms.getTempList()){
+    //find task
+
+    public Task FindTasks(int id){
+        List<Task> tasks = st.load();
+        for(Task t:tasks){
             if(t.getId() == id){
-                Task x = new Task(id, t.getTitle(), t.getDescription(), t.getPrioriy(),t.getStatus());
-                return x;
+                return t;
             }
         }
         return null;
     }
 
-    public void FilterTask(Status s){
-        for(Task t:this.ms.getTempList()){
+    //filter task
+
+    public List<Task> FilterTask(Status s){
+        List<Task> filteredTask = new ArrayList<>();
+        List<Task> tasks = st.load();
+        for(Task t: tasks){
             if(t.getStatus() == s){
-                System.out.println(t.getId() + t.getTitle() + t.getDescription() + t.getPrioriy().toString());
+                filteredTask.add(t);
             }
         }
-        return;
+        return filteredTask;
     }
 
-  public void returnTaskList() {
-   
-    for (Task t : this.ms.getTempList()) {
-        System.out.println(t.getId() + " " + 
-                           t.getTitle() + " " + 
-                           t.getDescription() + " " + 
-                           t.getPrioriy() + " " + 
-                           t.getStatus());
-    }
+    // return list 
+
+  public List<Task> returnTaskList() {
+   List<Task> tasks = st.load();
+   return tasks;
 }
 
 
