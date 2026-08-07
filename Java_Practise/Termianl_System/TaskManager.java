@@ -1,4 +1,4 @@
-package Termianl_System;
+// package Termianl_System;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +11,8 @@ public class TaskManager {
         this.st = st;
     }
 
+    
+
     //add task
     
     public void addTasks(Task t){
@@ -22,16 +24,14 @@ public class TaskManager {
     // delete task
 
     public void deleteTasks(Task t){
-        List<Task> tasks = st.load();
-        tasks.remove(t);
-        st.save(tasks);
+      List<Task> pt = new ArrayList<>(st.load());
+      
     }
 
     //find task
 
     public Task FindTasks(int id){
-        List<Task> tasks = st.load();
-        for(Task t:tasks){
+        for(Task t:st.load()){
             if(t.getId() == id){
                 return t;
             }

@@ -1,4 +1,4 @@
-package Termianl_System;
+// package Termianl_System;
 
 import java.util.List;
 import java.util.Scanner;
@@ -111,7 +111,10 @@ public class TerminalUI {
                     } else if (task.getStatus() == Status.COMPLETED) {
                         System.out.println("Task is already completed.");
                     } else {
-                        task.setStatus(Status.COMPLETED);
+                        Task t2 = new Task(task);
+                        t2.setCompleted();
+                        tm.addTasks(t2);
+                        tm.deleteTasks(task);
                         System.out.println("Task marked as completed.");
                     }
                 }

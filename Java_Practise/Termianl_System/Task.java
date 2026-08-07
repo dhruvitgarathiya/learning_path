@@ -1,4 +1,4 @@
-package Termianl_System;
+// package Termianl_System;
 
 public class Task {
 
@@ -68,4 +68,7 @@ public class Task {
             this.status = status;
         }
         
+        public void setCompleted(){
+            this.status = Status.COMPLETED;
+        }
 }
