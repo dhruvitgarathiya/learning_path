@@ -46,3 +46,7 @@ it gives us power of iterating in same list with unlimited position variables an
 in java we have collection interface and we also have collections class which is utility class
 
 
+# references
+
+medium.com/javarevisited/arraylist-performance-pitfalls-every-java-developer-should-know-b5f1e3bda59f
+
