@@ -1,0 +1,133 @@
+what is thread :
+
+if java program is recipe , and jvm is kitchen . normally one chef ( main thread) follows the racipe top to bottom - one step at a time in order
+
+thread is like hiring another chef who can work on a different part of the racipe at the same time, in same kitchen( same program, same memory ) .
+
+process vs thread :
+
+process = a separate kitchen entirly ( it's own memory , it's own resources ).
+ex - chorme and intellij different process
+
+thread = a chef working inside the same kitchen . multiple threads share same memory ( heap and static variable) but each has it's own call stack.
+
+shared memory part is single most important face in multithreading - it's reason both the power ( fast , parellel work) and pain ( bugs , race condition ) exist.
+
+why do we need multiple threads :
+
+1. concurrency : dealing with multiple things at once
+managing multiple tasks overlapping in time
+best for i/o bound task - waiting for databases or apis
+ex. server handling 1000 client requests on a single - core machine by switching between them rapidly.
+
+2. parallelism : doing many things at once actually
+executing multiple operations at the exact same instant
+best for cpu bound task - video rendering or data processing
+ex. using 8 cpu cores to sum 4 differnet chunks of an array simultaneusly.
+
+
+like to understand-  running an async web application on an single core cpu computer . the computer rapidly switches between processing user input and fetching data
+
+but when we run the async app on modern 8 core cpu, the program structure allows multiple requests to be porcessed and the physical hardware allows those request to be executed across the different cores
+
+single core machiene can have concurrency but not parellelism
+but multicore can have both
+
+
+
+real life scenirio - if you do hosue work by your own - cooking cleaning takes time - sum = total time for both
+
+but if you have room mate work will be divied and time becoms half
+
+buf ig you both need the same washing machine ( a shared resource) at the same time you cant both use it one of you have to wait. this is first taste of why synchronization exists.
+
+
+real life scenirio - file downloader
+
+thread 1 ( main thread ) - keeps the app responsive - you can still click buttons , scroll and cancle
+
+thread 2 ( background thread ) - downlaod the file which takse time
+
+if everything ran on one thread , clicking on cancle button wouldn't even register untill the download finished - beacouse the single chef is still busy follwoing the recipe and can't stop to listen to you.
+
+another conceret one : a web server when 100 user hit your wbesite at once the serber doesnt create 100 processes - it typically hands over each request to a separate thread from a thread pool , so request are handled concurrently instead of one user waiting for the previos user's request to fully finished
+
+behindd the scene -
+each thread has its own stack but shared the heap
+local variable -> live on the thread's own stack -> not shared no concflict
+objects created with new static varible -> live on the heap -> shared across all the threads this is excatly why two threads modifiying the same object can step on each other
+
+os does the actual scheduling
+an java thread maps to an os level thread (in modern jvms histocraclly this wasnt always true - green threads existed but ignore that for now)
+the os schedular decided which thread runs on which core
+and for how long using time slicing
+you dont control the exact order this is why multithreading bugs are often non-determinsitc ( works 99 time fails on 100th )
+
+context switching has a cost
+when cpu sitches from running thread a to thread b it has a save thread a's state and load thread b's state
+too many threads competing for too few cores wasted time context switching isntead of doing real work
+so more thread is not automatically faster
+
+jvm's main thread
+every java program already starts multithreading in a sense
+jvm spnis up main plus background thread for grabage collection
+jit compilation etc.
+you have been in multithreading environment the whole time without noticing
+
+creating threads in java
+
+way 1:
+
+class myThread extends Thread{
+@override
+public void run(){
+System.out.println("Running in: "+ Thead.currentThread().getName());
+
+
+}
+public class Main(){
+public static void main(String[] argds){
+MyThread t1 = new myThread();
+t1.start(); // start the new thread - runs run() concurrently
+}
+
+
+
+
+implementing runnable
+
+class MyTask implements Runnable{
+@override
+public void run(){
+Systme.out.println("Running in: "+ Thread.currentThread().getName());
+}
+}
+
+public class Main(){|
+public Static void main(String[] args){
+Thread t1 = new Thread(new MyTask());
+t1.start();
+}
+}
+
+// with lambda function
+
+Thread t1 = new Thread(() -> System.out.println("RUnning in: "+ Thread.currentThread().getName())):
+t1.start();
+
+why runnable is preferred over extends thread:
+
+java doesnt support multiple inheritance , if we extend one class  you cant extend thread clawss
+
+runnable sperates what tasks to do for how it's executed. this sepratation is excatly what let's you later plug tasks into a executorService / thread pool without chagning your tasks code at all\
+
+
+
+###
+biggest mistake begineer do - t1.run()
+if we call it directly you get 0 concurrency it just a regualr method call. this trips up almost everyone onece
+
+calling start tirgeers native os threads creation under the hood this is relatively expensive operation (memory allocation for new stack - os levewl book keepiong) that expesne is why thread pools exists ( reusing threads instead of creating new ones per tawsk)
+
+
+

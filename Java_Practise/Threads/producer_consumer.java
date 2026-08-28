@@ -15,6 +15,7 @@ class producer_consumer{
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
+        };
 
         Runnable consumer = () -> {
             try {
@@ -26,9 +27,9 @@ class producer_consumer{
                 Thread.currentThread().interrupt();
             }
         };
+    
 
         new Thread(producer).start();
         new Thread(consumer).start();
-        };
     }
 }

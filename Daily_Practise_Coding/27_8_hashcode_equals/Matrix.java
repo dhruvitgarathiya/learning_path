@@ -1,4 +1,6 @@
-import javax.swing.border.LineBorder;
+package Daily_Practise_Coding.27_8_hashcode_equals;
+
+public import javax.swing.border.LineBorder;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -50,4 +52,6 @@ public class Matrix {
         int result = p*31 + Objects.hash(this.getTages());
         return result;
     }
+} {
+    
 }

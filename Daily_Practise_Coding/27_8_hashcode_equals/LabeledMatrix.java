@@ -1,4 +1,6 @@
-import java.util.Arrays;
+package Daily_Practise_Coding.27_8_hashcode_equals;
+
+public import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,4 +38,6 @@ public class LabeledMatrix extends Matrix {
         int result  = super.hashCode() + p;
         return result;
     }
+} {
+    
 }
