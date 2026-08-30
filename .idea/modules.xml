@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Daily_Practise_Coding/28_8_Thread_fundamentals/28_8_Thread_fundamentals.iml" filepath="$PROJECT_DIR$/Daily_Practise_Coding/28_8_Thread_fundamentals/28_8_Thread_fundamentals.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Daily_Practise_Coding/Daily_Practise_Coding.iml" filepath="$PROJECT_DIR$/Daily_Practise_Coding/Daily_Practise_Coding.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Java_Practise/Java_Practise.iml" filepath="$PROJECT_DIR$/Java_Practise/Java_Practise.iml" />
+      <module fileurl="file://$PROJECT_DIR$/learning_path.iml" filepath="$PROJECT_DIR$/learning_path.iml" />
+    </modules>
+  </component>
+</project>
