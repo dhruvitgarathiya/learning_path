@@ -158,3 +158,327 @@ Handling the Request: When an HTTP request hits the embedded Tomcat server, Tomc
 Method Invocation: The DispatcherServlet looks up the incoming URL in its routing table, finds your controller's method, and uses standard Java Reflection (Method.invoke()) to execute it.
 
 Executing @ResponseBody / @RestController: If your class is marked as a @RestController, Spring bypasses the traditional Servlet RequestDispatcher (which forwards to JSPs). Instead, it hands your return object to an HttpMessageConverter (like the Jackson library), which writes the serialized JSON directly into response.getWriter().print()
+
+
+# stereotype annotations
+
+## @Component
+
+What it be: generic stereotype. Marks class as Spring-managed bean. Tell Spring: "scan me, make object of me, put in container (ApplicationContext)."
+
+Why need it: without @Component, class just plain Java class. New object every time you write new EmailValidator(). Spring don't know it exist. 
+
+With @Component, Spring's component-scan find class (during startup), create single instance (bean, default singleton scope), store in IoC container. Then you inject with @Autowired wherever need, no new keyword.
+
+Behind scenes:
+
+Spring Boot app has @ComponentScan (hidden inside @SpringBootApplication).
+
+Scan walks packages, look for classes annotated @Component (or meta-annotated with it — important point, see below).
+
+For each found class, Spring create BeanDefinition — blueprint: class name, scope, dependencies.
+
+Container instantiate bean (constructor call), resolve dependencies, store in registry, keyed by bean name (default = class name, first letter lowercase — emailValidator).
+
+Key fact — meta-annotation: @Service, @Repository, @Controller all internally annotated with @Component. Look inside Spring source:
+
+```java
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Component
+public @interface Service {
+    String value() default "";
+}
+```
+
+So @Service IS a @Component underneath, just extra semantic meaning slapped on. Component-scan catch all four, same mechanism.
+
+Difference between four ain't technical (mostly) — difference is intent + some extra behavior
+
+When use plain @Component:
+
+for beans not fitting other three roles. Example: validators, utility beans, config helpers, mappers, scheduled task classes.
+
+
+## @Service
+
+What it be: stereotype for business logic layer.
+
+this class hold business rules, calculations, orchestration between repository and controller.
+
+Technically = @component underneath no extra spring machinary added itself
+
+```java
+@Service
+public class OrderService {
+
+    private final OrderRepository orderRepository;
+    private final PaymentService paymentService;
+
+    public OrderService(OrderRepository orderRepository, PaymentService paymentService) {
+        this.orderRepository = orderRepository;
+        this.paymentService = paymentService;
+    }
+
+    public Order placeOrder(OrderRequest request) {
+        validateStock(request);
+        Order order = new Order(request);
+        paymentService.charge(request.getAmount());
+        return orderRepository.save(order);
+    }
+
+    private void validateStock(OrderRequest request) {
+        if (request.getQuantity() <= 0) {
+            throw new IllegalArgumentException("quantity must be positive");
+        }
+    }
+}
+```
+
+Why separate stereotype if same as @Component underneath?
+
+Readability / intent — dev opens codebase, see @Service on class, know instantly: "business logic here, no DB code, no HTTP code." Big team, big codebase, this matter lot.
+
+Layered architecture enforcement — Spring encourage 3-layer split:
+Controller (web) → Service (business) → Repository (data)
+
+@Service mark middle layer. Convention help keep concerns separated — service shouldn't handle HTTP request/response, repository shouldn't hold business rules.
+
+AOP targeting — tools like Spring AOP, @Transactional processing, logging aspects, security aspects often target @Service-annotated classes specifically via pointcut expressions like:
+
+
+```java
+   @Pointcut("@within(org.springframework.stereotype.service.Service)")
+```
+
+So marking correct stereotype matters for tooling that scan by annotation type, not just for humans reading code.
+
+@Transactional commanly here:
+
+```java
+@Service
+public class OrderService {
+
+    @Transactional
+    public Order placeOrder(OrderRequest request) {
+        // multiple DB operations here
+        // all commit together, or all rollback on exception
+    }
+}
+```
+
+@Transactional wrap method in DB transaction 
+
+proxy created aound bean, start transaction before method run 
+
+commit after , rollback if unchecked exception thorws
+
+Common to put on Service layer methods since that where multi-step business operations live (e.g. "deduct stock AND save order" — both must succeed together
+
+## @repository
+
+stereotype for data-access layer — classes talking to DB, files, external data stores
+
+Unlike @Service/@Controller, this one got real extra Spring behavior, not just label.
+
+```java
+@Repository
+public class OrderRepository {
+
+    private final JdbcTemplate jdbcTemplate;
+
+    public OrderRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public Order save(Order order) {
+        jdbcTemplate.update(
+            "INSERT INTO orders (id, amount) VALUES (?, ?)",
+            order.getId(), order.getAmount()
+        );
+        return order;
+    }
+}
+```
+
+Extra behavior — exception translation:
+
+Spring wrap @Repository beans with PersistenceExceptionTranslationPostProcessor
+
+This post-processor create proxy around bean. Proxy catch technology-specific exceptions — like SQLException, JDBC's SQLIntegrityConstraintViolationException, Hibernate's ConstraintViolationException — and translate into Spring's own unified hierarchy: DataAccessException (unchecked, under org.springframework.dao).
+
+Why matter — real problem it solve:
+
+Without translation, service layer code look like:
+
+```java
+try{
+        orderRepository.save(order);
+}catch(SQLException e){ // jdbc specific
+        //handle
+}catch(ConstraintViolationException e){ // hibernate-specific
+        // handle
+}
+```
+Business layer now tightly coupled to which persistence tech used underneath. Switch from JDBC to Hibernate to JPA — all catch blocks broken across whole codebase.
+
+With @Repository, exception translated automatically, service layer catch generic Spring exception instead:
+
+```java
+try {
+    orderRepository.save(order);
+} catch (DataIntegrityViolationException e) {   // Spring's own, tech-agnostic
+    // handle duplicate key, constraint fail, etc — regardless of JDBC/Hibernate/JPA
+}
+```
+
+Behind scenes — how translation actually happen:
+
+- PersistenceExceptionTranslationPostProcessor scan for beans annotated @Repository during context startup.
+
+- For each, look up matching PersistenceExceptionTranslator bean (Spring Boot auto-configure one based on which persistence tech on classpath — JDBC, JPA, Hibernate all got own translator).
+
+- proxy wrap around repository bean's methods
+
+- method call intercepted -> run actual db call -> if exception thrown -> translator convert it -> rethrow as DataAccessException
+subtype
+
+
+DataAccessException (abstract, unchecked)
+├── DataIntegrityViolationException     (constraint violations)
+├── DuplicateKeyException               (unique key clash)
+├── EmptyResultDataAccessException      (expected 1 row, got 0)
+├── OptimisticLockingFailureException
+
+When skip it: if class not touching persistence tech (no DB, no file I/O exceptions to translate), no benefit — just use @Component instead. Adding @Repository to non-DB class = pointless proxy overhead, no functional gain.
+
+## @Controller / @RestController
+
+what it be: tereotype for web layer — classes handling incoming HTTP requests, returning responses. Entry point of app.
+
+```java
+@Controller
+public class OrderPageController {
+
+    private final OrderService orderService;
+
+    public OrderPageController(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
+    @GetMapping("/orders/{id}")
+    public String getOrderPage(@PathVariable Long id, Model model) {
+        Order order = orderService.findById(id);
+        model.addAttribute("order", order);
+        return "orderView";   // name of view template — e.g. orderView.html (Thymeleaf)
+    }
+}
+```
+
+by default return value of method treated as view name 
+
+spring pass it to viewResolver which map string "OrderView" to actual templet file( thymeleaf , jsp ,etc) .
+
+render html , send that html back to browser
+
+used for server side rendered web apps(full html pages)
+
+## @RestController
+
+```java
+@RestController
+public class OrderApiController {
+
+    private final OrderService orderService;
+
+    public OrderApiController(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
+    @GetMapping("/api/orders/{id}")
+    public Order getOrder(@PathVariable Long id) {
+        return orderService.findById(id);
+    }
+}
+```
+
+return value here not view name, it's actual data, serialized (usually to JSON) and written directly into http response body
+
+used for rest apis mobile backend and frontend talking over json
+
+@RestController = @Controller + @ResponseBody
+
+dont treat return value as view name , write it straight to reponse body. 
+
+Spring use HttpMessageConverter ( uses jackson ) to convert java object -> json string automatically
+
+if used plain controller but wanted json reposne would need responsebody on every method manually
+
+```java
+@Controller
+public class OrderApiController {
+
+    @GetMapping("/api/orders/{id}")
+    @ResponseBody   // needed manually here, else Spring look for view named "order object toString"-ish, fail
+    public Order getOrder(@PathVariable Long id) {
+        return orderService.findById(id);
+    }
+}
+```
+
+**Request flow full picture**
+
+browser client send http request -> hit dispatcherServlet 
+
+dispatcherServlet consult HandMapping finds which controller method match URL + HTTP verb (based on getmapping , postmapping - these are shortcuts for requestMapping(method = ..))
+
+method invoked params vound (@pathvariable, @requestParam, @requestBody) exctrat values from url / query/ body
+
+method run - call service layer . get result.
+
+return value processed by handlermethodreturnvaluehandler:
+
+        - @controller (no responsebody) => treated as view name => viewResolver => render html
+
+        - @restController (or responsebody) => passed to httpmessageConverter -> serialized (JSON/XML) -> written to response body directly
+
+reponse sent back to client
+
+
+common format of writing restcontoller code:
+
+```java
+@RestController
+@RequestMapping("/api/orders")
+public class OrderApiController{
+        private final OrderService orderService;
+
+        public OrderApiController(OrderService orderService){
+                this.orderService = orderService;
+        }
+
+        @GetMapping('/{id}')
+        public Order getOrder(@pathVarible Long id){
+                return orderService.findById(id);
+        }
+
+        @PostMapping
+        public Order creatOrder(@RequestBody OrderRequest request){
+                return orderService.placeOrder(request);
+        }
+
+        @GetMapping
+        public List<Order> searchOrders(@RequestParam String status){
+                return orderService.findByStatus(status);
+        }
+}
+```
+
+@RequestMapping("/api/orders") at class level — base path, prepended to all method paths.
+
+@PathVariable — pull value from URL path segment (/{id}).
+
+@RequestParam — pull value from query string (?status=PENDING).
+
+@RequestBody — deserialize JSON request body into Java object (reverse of @ResponseBody — uses same HttpMessageConverter machinery, opposite direction)
