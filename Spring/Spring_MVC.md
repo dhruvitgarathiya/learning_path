@@ -517,5 +517,201 @@ public List<Order> filterOrders(
 }
 ```
 
+### methods vs what it can't handle
+
+**GET**
+
+Can't reliably carry request body — reason: spec say body "no defined semantics" for GET, browsers/proxies/load balancers strip it before reach server (learned two topic back)
+
+Can't send large/complex data — reason: forced rely URL query string only (since body unreliable), URL length limit (~2000 char typical), nested/structured data awkward cram into query string
+
+Can't perform create/update/delete safely — reason: spec define GET as safe + idempotent (no side effect promise), infra (CDN, browser back-button, crawlers) assume calling GET repeat is harmless, auto-retry/prefetch/cache GET freely — if GET secretly change data, break that assumption, cause bug (e.g. browser prefetch accidentally trigger delete)
+
+HEAD: Asks for the same response headers as a GET request, but without the actual response body. Use this to check file sizes or see if a resource exists before downloading it.
+
+Can't return body at all — reason: spec define HEAD = "same as GET but response body always omit," used only check headers/existence, meta-info, never actual content
+
+Can't carry request body — same reason as GET (identical semantic restriction, HEAD basically GET's twin)
 
 
+**Delete**
+
+Can't reliably carry meaningful request body — reason: like GET, spec historically say body "no defined semantics" for DELETE too (though newer RFC loosen slightly), most server framework/infra still don't expect/parse DELETE body, risky rely on it
+
+Can't be assumed safe repeat without side-effect awareness — reason: DELETE idempotent (call twice = same end state, resource gone both time) but NOT safe (first call always cause real change) — different guarantee than GET, mixing up cause bug assumption
+
+
+TRACE: Performs a message loop-back test. Use this to see if any intermediate proxies or servers are changing your request during transit (though often disabled for security)
+
+Can't carry any body — reason: spec explicit forbid, TRACE = pure diagnostic echo-back method, request bounce back as-is for debug, body break the echo purpose, security risk too (can leak header/cookie info) — many server disable entire TRACE method by default
+
+
+OPtions : Asks the server what communication options and methods are allowed for a specific resource. Use this for CORS (Cross-Origin Resource Sharing) preflight checks.
+
+Can't carry meaningful request body typically — reason: purpose = ask server "what method/capability you support," pure metadata query, no data-handling semantics defined, adding body pointless, ignored by convention
+
+Can't perform any actual operation — reason: spec strict define OPTIONS = query capability only, never trigger real action, safe + idempotent, side-effect strictly forbidden by design
+
+**PUT**
+
+Can't do partial update properly — reason: spec define PUT = full replace resource, must send complete representation, missing field = treat as field wiped/null (not "leave unchanged"), common bug when dev assume partial update work like PATCH
+
+Can't skip specifying resource identity — reason: PUT need know exact resource URL replace (/users/5), can't PUT to collection URL (/users) meaningfully — spec expect client know ID already, unlike POST where server can generate ID
+
+**PATCH**
+
+ Applies partial updates to a resource. (Often grouped with the main methods now, but worth noting if your "famous four" meant just GET/POST/PUT/DELETE)
+
+ Can't guarantee idempotency by spec — reason: unlike PUT, PATCH spec don't force idempotent guarantee (depend how patch document written — e.g. "increment counter by 1" patch = NOT idempotent, repeat = different result each time) — infra can't safely auto-retry PATCH assuming safe, unlike PUT/GET
+
+ Can't have universal body format — reason: spec don't mandate single patch format, multiple competing standard exist (JSON Patch, JSON Merge Patch, plain partial JSON) — client/server must agree format beforehand, no built-in universal parse like @RequestBody JSON usual case
+
+
+
+# bean annotations in spring mvc
+
+core annotations:
+
+```java
+public class User {
+    @NotNull(message = "name required")
+    private String name;
+
+    @Size(min = 2, max = 30)
+    private String username;
+
+    @Email
+    private String email;
+
+    @Min(18)
+    @Max(100)
+    private int age;
+
+    @NotBlank
+    private String password;
+}
+```
+
+@NotNull — value not null (empty string ok)
+@NotBlank — string not null, not empty, not just whitespace
+@NotEmpty — collection/string not null, not empty (whitespace ok)
+@Size(min=, max=) — length/collection size bounds
+@Min / @Max — number bounds
+@Email — valid email format
+@Pattern(regexp = "...") — regex match
+@Past / @Future — date checks
+
+
+**Trigger in controller with @Valid:**
+
+```java
+@PostMapping("/users")
+public ResponseEntity<?> createUser(@Valid @RequestBody User user, BindingResult result) {
+    if (result.hasErrors()) {
+        return ResponseEntity.badRequest().body(result.getAllErrors());
+    }
+    // save user
+    return ResponseEntity.ok(user);
+}
+```
+
+Without @Valid — annotations sit there, do nothing. Spring skip validation.
+
+Flow:
+
+Request body → Spring bind to User object
+@Valid trigger check against all annotations
+Fail → BindingResult catch errors (no BindingResult param → Spring throw MethodArgumentNotValidException instead, 400 response auto)
+
+**Global error handling, cleaner than BindingResult everywhere:**
+
+```java
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleValidation(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getFieldErrors()
+          .forEach(e -> errors.put(e.getField(), e.getDefaultMessage()));
+        return ResponseEntity.badRequest().body(errors);
+    }
+}
+```
+
+## ResponseEntity<T> wrapper
+
+Control status code, headers, body all together. Instead of just returning object (Spring auto 200 always), you pick exact response.
+
+Why need it: Plain return type—
+
+```java
+@GetMapping("/{id}")
+public User getUser(@PathVariable Long id) {
+    return userService.find(id); // always 200, even if null/not found
+}
+```
+
+Problem: user not found → still 200 OK, body null. Bad API design.
+
+Fix with ResponseEntity:
+
+```java
+@GetMapping("/{id}")
+public ResponseEntity<User> getUser(@PathVariable Long id) {
+    User user = userService.find(id);
+    if (user == null) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+    return ResponseEntity.ok(user); // 200 + body
+}
+```
+
+Common status builders:
+
+ResponseEntity.ok(body) — 200
+ResponseEntity.status(HttpStatus.CREATED).body(x) or .created(uri) — 201
+ResponseEntity.noContent().build() — 204
+ResponseEntity.badRequest().body(errors) — 400
+ResponseEntity.status(HttpStatus.NOT_FOUND).build() — 404
+ResponseEntity.status(HttpStatus.CONFLICT).body(msg) — 409, e.g. duplicate entry
+
+
+## Gloabal exception handling
+
+writing try catch everywhere is messy
+
+bad duplicate code everymethod change error format later -> edit 50 place
+
+solution: 
+
+pull all catch logic out, one place
+
+two tools:
+
+1. @exceptionHandler - catch method, sit inside one controller , catch errors only for that controller
+
+2. @RestControllerAdvice - catch class , sit outside all controllers , catch errors from whole app, one place
+
+ex. @ExceptionHandler - local , one controller only
+
+```java
+@RestController
+public class UserController{
+
+    @GetMapping("/{id}")
+    public User getUser(@PathVariable Long id){
+        return userService.find(id); //throws exception if not found here, no try catch here
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<String> handleNotFound(UserNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+}
+```
+
+
+
+
+ 
