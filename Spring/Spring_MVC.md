@@ -712,6 +712,50 @@ public class UserController{
 ```
 
 
+## what we actually do in real project
+
+Custom error object, consistent format client always get:
+
+```java
+public class ErrorResponse {
+    private String message;
+    private int status;
+    private LocalDateTime timestamp;
+
+    // constructor, getters
+}
+```
+
+```java
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleUserNotFound(UserNotFoundException e) {
+        ErrorResponse err = new ErrorResponse(e.getMessage(), 404, LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleValidation(MethodArgumentNotValidException e) {
+        Map<String, String> errors = new HashMap<>();
+        e.getBindingResult().getFieldErrors()
+         .forEach(f -> errors.put(f.getField(), f.getDefaultMessage()));
+        return ResponseEntity.badRequest().body(errors);
+    }
+}
+```
+
+client always gets
+
+```java
+{
+  "message": "user id 5 not found",
+  "status": 404,
+  "timestamp": "2026-09-03T10:15:30"
+}
+```
+
 
 
  

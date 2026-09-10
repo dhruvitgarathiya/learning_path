@@ -6,6 +6,9 @@
 
 ```text
 .
++-- Daily_coding_practise
++-- Spring_Practise
+|   +--CRUD apis
 +-- Java_practise/
 ¦   +-- Payment_gatway
 ¦   +-- Food_delivery
@@ -23,6 +26,17 @@
 ¦   +-- Java_10
 ¦   +-- Java_11
 ¦   +-- Java_12
++-- JDBC
+|   +--Info
+|   +--Servlet
+|-- Spring
+|   +-- Di-loc
+|   +-- Annotation_execution
+|   +-- Bean
+|   +-- JPA
+|   +-- Spring_boot
+|   +-- Spring_MVC
+|   +-- why_Spring_and_MVC
 +-- MongoDB_Theory/
 ¦   +-- mongodb.md
 ¦
@@ -37,7 +51,7 @@
     +-- function_stored_procedure.md
     +-- hospital_management_system.md
     +-- jsob.md
-    +-- normalization.md
+    +-- normalization.mdtheory and sections of the java persisitance api in depth
     +-- postgresql-2.md
     +-- postgresql-3.md
     +-- postgrsql_basic
@@ -88,6 +102,27 @@
 
 ---
 
+##  Spring
+
+| File | Description |
+|------|-------------|
+| `Annotation_Execution` | how annotations are executed|
+| `Bean` | what is bean how bean works |
+| `di-ioc` | thoery of dependecny injection and inversion of control in depth |
+| `JPA` | theory and sections of the java persisitance api in depth |
+| `Spring boot` | Conceptual thinking of why spring boot exists and what is it |
+| `Spring_mvc` | theory of how mvc concept works in spring  |
+| `why spring and spring mvc exists` |theory and sections of the java persisitance api in depth Proper reasoing behind it |
+
+---
+
+## JDBC
+
+| File | Description |
+|------|-------------|
+| `info` | whole thory about jdbc|
+| `servlet` |whole thoey about servlets|
+
 ##  PostgreSQL Theory
 
 | File | Description |
@@ -102,7 +137,7 @@
 | `function_stored_procedure.md` | Functions and stored procedures. |
 | `triggers_cursor.md` | Triggers and cursors. |
 | `jsob.md` | JSON/JSONB data types and operations. |
-| `hospital_management_system.md` | Complete Hospital Management System database design. |
+| `hospital_management_system.md` | Cotheory and sections of the java persisitance api in depthmplete Hospital Management System database design. |
 
 ---
 
