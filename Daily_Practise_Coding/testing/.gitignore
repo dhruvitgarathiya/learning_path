@@ -1,0 +1,25 @@
+### System Files (Crucial for multi-platform teams) ###
+.DS_Store
+Thumbs.db
+desktop.ini
+
+### Environment Variables & Secrets (CRITICAL for security) ###
+.env
+.env.local
+.env.*.local
+*.properties.local
+*.yml.local
+
+### Maven Wrapper Scripts (Optional, but highly recommended) ###
+# Keep maven-wrapper.jar ignored (as you have it), but you can also ignore these
+# if you want developers to use their own local Maven installations instead of the project wrapper.
+.mvn/
+mvnw
+mvnw.cmd
+
+### Log Files ###
+*.log
+logs/
+
+### Crash Dumps ###
+*.hprof
