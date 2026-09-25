@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import springtesting.learning.testing.UserNotFoundException;
 import springtesting.learning.testing.entity.User;
 import springtesting.learning.testing.service.UserService;
 
@@ -59,6 +60,17 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.name").value("Alice"))
                 .andExpect(jsonPath("$.email").value("alice@example.com"));
 
+    }
+
+    @Test
+    void getUser_whenUserDoesNotExists_shouldReturn404() throws Exception{
+        when(userService.getUserById(999L))
+                .thenThrow(new UserNotFoundException(999L));
+
+        mockMvc.perform(get("/api/users/999"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.message").value("User not found with id: 99999"));
     }
 
 }

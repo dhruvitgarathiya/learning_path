@@ -1,4 +1,4 @@
-package com.yourpackage.model;
+package springtesting.learning.testing.entity;
 
 import jakarta.persistence.*;
 

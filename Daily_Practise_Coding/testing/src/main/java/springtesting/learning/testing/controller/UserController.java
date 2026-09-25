@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import springtesting.learning.testing.entity.User;
 import springtesting.learning.testing.service.UserService;
 
 @RestController
@@ -17,14 +18,14 @@ public class UserController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<com.yourpackage.model.User> getUser(@PathVariable Long id){
-        com.yourpackage.model.User user = userService.getUserById(id);
+    public ResponseEntity<User> getUser(@PathVariable Long id){
+        User user = userService.getUserById(id);
         return ResponseEntity.ok(user);
     }
 
     @PostMapping
-    public ResponseEntity<com.yourpackage.model.User> createUser(@RequestBody UserRequest request){
-        com.yourpackage.model.User user = userService.createUser(request.getName(), request.getEmail());
+    public ResponseEntity<User> createUser(@RequestBody UserRequest request){
+        User user = userService.createUser(request.getName(), request.getEmail());
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
