@@ -73,4 +73,42 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.message").value("User not found with id: 99999"));
     }
 
+    @Test
+    void createUser_withValidData_shouldReturn201() throws Exception{
+        User createdUser = new User(1L, "Alice", "alice@example.com");
+        when(userService.createUser(anyString(), anyString())).thenReturn(createdUser);
+
+        String requestBody = """
+                {
+                "name" : "Alice",
+                "email" : "alice@example.com
+                }
+                """;
+
+        mockMvc.perform(post("/api/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name").value("Alice"));
+    }
+
+    @Test
+    void createUser_withInvalidData_shouldReturn400() throws Exception {
+        String requestBody = """
+            {
+                "name": "",
+                "email": "invalid-email"
+            }
+            """;
+
+        mockMvc.perform(post("/api/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.error").value("Bad Request"))
+                .andExpect(jsonPath("$.errors.name").exists())
+                .andExpect(jsonPath("$.errors.email").exists());
+    }
+
 }
