@@ -6,6 +6,8 @@ import springtesting.learning.testing.UserNotFoundException;
 import springtesting.learning.testing.entity.User;
 import springtesting.learning.testing.repositroy.UserRepository;
 
+import java.util.List;
+
 @Service
 public class UserService {
 
@@ -16,13 +18,15 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User getUserById(Long id){
-        return userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(id));
+    public List<User> getAllUsers(){
+        return userRepository.findAll();
     }
 
+    public void deleteUser(Long id){
+        if(!userRepository.existsById(id)){
+            throw new UserNotFoundException(id);
+        }
 
-    public Object createUser(String s, String s1) {
-        return null;
+        userRepository.deleteById(id);
     }
 }

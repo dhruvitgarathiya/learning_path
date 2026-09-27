@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import springtesting.learning.testing.entity.User;
 import springtesting.learning.testing.service.UserService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -39,5 +41,16 @@ public class UserController {
 
         public String getEmail() {return email;}
         public void setEmail(String email) {this.email = email;}
+    }
+
+    @GetMapping
+    public ResponseEntity<List<User>> getAllUsers(){
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id){
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 }

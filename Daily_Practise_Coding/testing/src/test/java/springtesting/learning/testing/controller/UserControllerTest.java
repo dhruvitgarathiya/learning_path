@@ -8,8 +8,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import springtesting.learning.testing.UserNotFoundException;
 import springtesting.learning.testing.entity.User;
+import springtesting.learning.testing.repositroy.UserRepository;
 import springtesting.learning.testing.service.UserService;
 
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -25,6 +29,9 @@ public class UserControllerTest {
 
     @MockBean
     private UserService userService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Test
     void getUser_whenUserExists_shouldReturn200AndUser() throws Exception {
@@ -109,6 +116,21 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.error").value("Bad Request"))
                 .andExpect(jsonPath("$.errors.name").exists())
                 .andExpect(jsonPath("$.errors.email").exists());
+    }
+
+    @Test
+    void getAllUsers_shouldReturnListOfUsers(){
+        List<User> users = List.of(
+                new User(1L,"John", "john@example.com"),
+                new User(2L, "Alice", "alice@example.com")
+        );
+
+        when(userRepository.findAll()).thenReturn(users);
+
+        List<User> result = userService.getAllUsers();
+
+        assertEquals(2, result.size());
+        assertEquals("john", result.get(0).getName());
     }
 
 }
