@@ -29,4 +29,14 @@ public class UserService {
 
         userRepository.deleteById(id);
     }
+
+    public User updateUser(Long id, String name, String email){
+        User user = userRepository.findById(id)
+                .orElseThrow(()-> new UserNotFoundException(id));
+
+        user.setName(name);
+        user.setEmail(email);
+
+        return userRepository.save(user);
+    }
 }

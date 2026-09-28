@@ -12,9 +12,13 @@ import springtesting.learning.testing.repositroy.UserRepository;
 import springtesting.learning.testing.service.UserService;
 
 import java.util.List;
+import java.util.Optional;
 
+import static jdk.internal.org.objectweb.asm.util.CheckClassAdapter.verify;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -133,4 +137,47 @@ public class UserControllerTest {
         assertEquals("john", result.get(0).getName());
     }
 
+    @Test
+    void updateUser_whenUserExists_shouldUpdateAndReturnUser(){
+        User existingUser = new User(1L, "Old Name", "old@example.com");
+        when(userRepository.findById(1L)).thenReturn(Optional.of(existingUser));
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArguments(0));
+
+        User result = userService.updateUser(1L, "new name","new@example.com");
+
+        assertEquals("new name", result.getName());
+        assertEquals("new@example.com", result.getEmail());
+        verify(userRepository).save(existingUser);
+    }
+
+    @Test
+    void updateUser_whenUserNotFound_shouldThrowException(){
+        when(userRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(UserNotFoundException.class, ()-> {
+            userService.updateUser(99L, "Name", "email@example.com");
+        })
+    }
+
+    @Test
+    void updateUser_shouldReturn200AndUpdatedUser() throws Exception{
+        User updatedUser = new User(1L, "Updated Name", "updated@example.com");
+        when(userService.updateUser(eq(1L),anyString(),anyString())).thenReturn(updatedUser);
+
+        String requestBody = """
+                {
+                "name" : "Updated Name",
+                "email" : "updated@example.com"
+                }
+                """;
+
+        mockMvc.perform(put("/api/users/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody)
+
+        )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Updated name"))
+                .andExpect(jsonPath("$.email").value("updated@example.com"));
+    }
 }
