@@ -62,4 +62,10 @@ public class UserController {
         User updatedUser = userService.updateUser(id, request.getName(), request.getEmail());
         return ResponseEntity.ok(updatedUser);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<User>> searchUser(@RequestParam String name){
+        List<User> users = userService.searchUserByName(name);
+        return ResponseEntity.ok(users);
+    }
 }

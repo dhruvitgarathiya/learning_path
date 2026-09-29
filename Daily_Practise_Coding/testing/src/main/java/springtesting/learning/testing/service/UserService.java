@@ -39,4 +39,8 @@ public class UserService {
 
         return userRepository.save(user);
     }
+
+    public List<User> searchUserByName(String name){
+        return userRepository.findByNameContainingIgnoreCase(name);
+    }
 }

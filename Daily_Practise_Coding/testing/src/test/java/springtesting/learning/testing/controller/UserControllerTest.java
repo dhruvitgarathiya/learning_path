@@ -180,4 +180,34 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.name").value("Updated name"))
                 .andExpect(jsonPath("$.email").value("updated@example.com"));
     }
+
+    @Test
+    void searchUserByName_shouldReturnMatchingUsers(){
+        List<User> users = List.of(
+                new User(1L, "John doe", "john@example.com"),
+                new User(2L, "Johnny","johnny@example.com")
+        );
+
+        when(userRepository.findByNameContainingIgnoreCase("john")).thenReturn(users);
+
+        List<User> result = userService.searchUserByName("john");
+
+        assertEquals(2, result.size());
+        assertEquals("John Doe", result.get(0).getName());
+
+
+    }
+
+
+    @Test
+    void searchUser_shouldReturnMatchingUsers() throws Exception{
+        List<User> users = List.of(new User(1L,"John","john@example.com"));
+        when(userService.searchUserByName("john")).thenReturn(users);
+
+        mockMvc.perform(get("/api/users/search")
+                .param("name", "john")
+        ).andExpect(status().isOk())
+                .andExpect(jsonPath("$.size").value(1))
+                .andExpect(jsonPath("$[0].name").value("john"));
+    }
 }
