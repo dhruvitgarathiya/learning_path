@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import springtesting.learning.testing.entity.User;
 import springtesting.learning.testing.repositroy.UserRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -73,6 +74,32 @@ public class UserServiceTest {
         assertEquals(10L, result.getId());
         assertEquals("Alice",result.getName());
         verify(userRepository).save(any(User.class));
+    }
+
+    @Test
+    void searchUserByEmail_shouldReturnMatchingUser(){
+        List<User> users = List.of(
+                new User(1L, "John Doe", "john@example.com"),
+                new User(2L, "Jony","jony@example.com")
+        );
+        when(userRepository.findByEmail("john")).thenReturn(users);
+
+        List<User> result = userService.searchUserByName("john");
+
+        assertEquals(1,result.size());
+        assertEquals("john@example.com", result.get(0).getName());
+    }
+
+    @Test
+    void searchUserByEmail_shouldReturnMatchingUser() throws Exception{
+        List<User> users = List.of(new User(1L,"john","john@example.com"));
+        when(userService.findByEmail("john@example.com")).thenReturn(users);
+
+        mockMvc.perform(get("/api/users/search")
+                .param("name","john")
+        ).andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].name").value("john"));
+
     }
 
 }

@@ -67,5 +67,12 @@ public class UserController {
     public ResponseEntity<List<User>> searchUser(@RequestParam String name){
         List<User> users = userService.searchUserByName(name);
         return ResponseEntity.ok(users);
+
+    }
+
+    @GetMapping("/email")
+    public ResponseEntity<List<User>> searchUserByEmail(@RequestParam String email){
+        List<User> users = userService.findByEmail(email);
+        return ResponseEntity.ok(users);
     }
 }
