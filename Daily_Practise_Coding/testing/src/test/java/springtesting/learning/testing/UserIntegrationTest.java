@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import springtesting.learning.testing.entity.User;
 import springtesting.learning.testing.repositroy.UserRepository;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -67,5 +69,23 @@ class UserIntegrationTest {
         // Depending on how your controller handles exceptions
         mockMvc.perform(get("/api/users/99999"))
                 .andExpect(status().is5xxServerError());   // or isNotFound() if you handle it properly
+    }
+
+    @Test
+    void isEmailExists_whenEmailExists_shouldReturnsTrue(){
+        when(userRepository.existsByEmail("john@example.com")).thenReturn(true);
+
+        boolean result = userService.isEmailExists("john@example.com");
+
+        assertTrue(result);
+    }
+
+    @Test
+    void isEmailExists_whenEmailDoesNotExists_shouldReturnsFalse(){
+        when(userRepository.existsByEmail("unknown@example.com")).thenReturn(false);
+
+        boolean result = userService.isEmailExists("unknwo@example.com");
+
+        assertFalse(result);
     }
 }
