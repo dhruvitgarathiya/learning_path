@@ -88,4 +88,28 @@ class UserIntegrationTest {
 
         assertFalse(result);
     }
+
+    @Test
+    void getAllUsers_whenUsersExist_shouldReturnUsers() throws Exception {
+        User user1 = new User();
+        user1.setName("Alice");
+        user1.setEmail("alice@example.com");
+
+        User user2 = new User();
+        user2.setName("Bob");
+        user2.setEmail("bob@example.com");
+
+        userRepository.save(user1);
+        userRepository.save(user2);
+
+        mockMvc.perform(get("/api/users"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].name").value("Alice"))
+                .andExpect(jsonPath("$[0].email").value("alice@example.com"))
+                .andExpect(jsonPath("$[1].name").value("Bob"))
+                .andExpect(jsonPath("$[1].email").value("bob@example.com"));
+    }
+
+
 }
