@@ -111,5 +111,19 @@ class UserIntegrationTest {
                 .andExpect(jsonPath("$[1].email").value("bob@example.com"));
     }
 
+    @Test
+    void deleteUser_whenUserExists_shouldDeeteUser() throws Exception{
+        User user = new User();
+        user.setName("Charlie");
+        user.setEmail("charlie@example.com");
+
+        User savedUser = userRepository.save(user);
+        Long userId = savedUser.getId();
+
+        mockMvc.perform(delete("/api/users" + userId))
+                .andExpect(status().isNotContent());
+
+        assertTrue(userRepository.findById((userId)).isEmpty());
+    }
 
 }
