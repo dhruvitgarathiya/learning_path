@@ -1,0 +1,32 @@
+# --- Build Outputs ---
+target/
+build/
+out/
+*.jar
+*.war
+*.class
+
+# --- IDE Settings ---
+.idea/
+*.iml
+*.ipr
+*.iws
+.settings/
+.classpath
+.project
+.factorypath
+.springBeans
+.vscode/
+
+# --- Environment and Configuration Secrets ---
+.env
+*.local
+application-local.properties
+application-local.yml
+
+# --- System Files & Logs ---
+.DS_Store
+Thumbs.db
+log/
+*.log
+*.tmp
