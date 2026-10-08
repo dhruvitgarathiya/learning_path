@@ -11,8 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class AuthServiceTest {
@@ -101,6 +100,35 @@ public class AuthServiceTest {
 
     }
 
+    @Test
+    void registerUser_shouldThrowException_whenEmailAlreadyExists(){
+        // arrange
+        RegisterRequest request = new RegisterRequest();
+
+        request.setName("Dhruvit");
+        request.setEmail("dhruvit@gmail.com");
+        request.setPassword("password123");
+
+        // email already exists
+
+        when(userRepository.existsByEmail("dhruvit@gmail.com")).thenReturn(true);
+
+        // act+assert
+        RuntimeException exception = assertThrows(
+                RuntimeException.class,
+                () -> authService.registerUser(request)
+        );
+
+        // verify exception message
+        assertEquals(
+                "Email already registerd",
+                exception.getMessage()
+        );
+
+        // veify save() was never called
+        verify(userRepository, never())
+                .save(any(User.class));
+    }
 
 
 }
