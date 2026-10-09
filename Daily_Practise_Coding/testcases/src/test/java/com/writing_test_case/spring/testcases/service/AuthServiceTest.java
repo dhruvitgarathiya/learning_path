@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -18,6 +19,9 @@ public class AuthServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private AuthService authService;
@@ -128,6 +132,34 @@ public class AuthServiceTest {
         // veify save() was never called
         verify(userRepository, never())
                 .save(any(User.class));
+    }
+
+    @Test
+    void registerUser_shouldEncodePasswordBeforeSaving(){
+
+        RegisterRequest request = new RegisterRequest();
+        request.setName("Dhruvit");
+        request.setEmail("dhruvit@gmail.com");
+        request.setPassword("password123");
+
+        when(userRepository.existsByEmail("dhruvit@gmail.com")).thenReturn(false);
+
+        when(passwordEncoder.encode("password123"))
+                .thenReturn("$2a$12$hashedPasswordExample");
+
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArguments(0));
+
+        User result = authService.registerUser(request);
+
+        // Assert
+        assertEquals(
+                "$2a$12$hashedPasswordExample",
+                result.getPassword()
+        );
+
+        verify(passwordEncoder).encode("password123");
+        verify(userRepository).save(any(User.class));
+
     }
 
 
