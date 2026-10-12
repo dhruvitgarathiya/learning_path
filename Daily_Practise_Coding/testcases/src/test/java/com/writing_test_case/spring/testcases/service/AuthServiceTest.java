@@ -10,6 +10,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -147,7 +149,7 @@ public class AuthServiceTest {
         when(passwordEncoder.encode("password123"))
                 .thenReturn("$2a$12$hashedPasswordExample");
 
-        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArguments(0));
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArguments());
 
         User result = authService.registerUser(request);
 
@@ -159,6 +161,35 @@ public class AuthServiceTest {
 
         verify(passwordEncoder).encode("password123");
         verify(userRepository).save(any(User.class));
+
+    }
+
+    @Test
+    void loginUser_shouldReturnUser_whenCredentialAreValid(){
+
+        String email = "dhruvit@gmail.com";
+        String rawPassword = "password123";
+        String hashPassword = "$2a$12$mockedHash";
+
+        User user = new User();
+        user.setId(1L);
+        user.setName("Dhruvit");
+        user.setEmail(email);
+        user.setPassword(hashPassword);
+
+        when(userRepository.findByEmail(email))
+                .thenReturn(Optional.of(user));
+
+        when(passwordEncoder.matches(rawPassword,hashPassword))
+                .thenReturn(true);
+
+        User result = authService.loginUser(email,rawPassword);
+
+        assertNotNull(result);
+        assertEquals(email, result.getEmail());
+
+        verify(userRepository).findByEmail(email);
+        verify(passwordEncoder).matches(rawPassword, hashPassword);
 
     }
 
