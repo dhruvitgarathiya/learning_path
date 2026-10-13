@@ -194,4 +194,30 @@ public class AuthServiceTest {
     }
 
 
+    @Test
+    void loginUser_shouldThrowException_whenEmailDoesNotExist() {
+
+        // Arrange
+        String email = "unknown@gmail.com";
+        String password = "password123";
+
+        when(userRepository.findByEmail(email))
+                .thenReturn(Optional.empty());
+
+        // Act + Assert
+        RuntimeException exception = assertThrows(
+                RuntimeException.class,
+                () -> authService.loginUser(email, password)
+        );
+
+        assertEquals(
+                "Invalid email or password",
+                exception.getMessage()
+        );
+
+        // Password comparison must never happen
+        verify(passwordEncoder, never())
+                .matches(anyString(), anyString());
+    }
+
 }
