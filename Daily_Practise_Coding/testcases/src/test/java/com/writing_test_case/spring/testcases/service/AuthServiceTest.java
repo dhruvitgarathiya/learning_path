@@ -220,4 +220,48 @@ public class AuthServiceTest {
                 .matches(anyString(), anyString());
     }
 
+    @Test
+    void loginUser_shouldThrowException_whenPasswordIsIncorrect() {
+
+        // Arrange
+        String email = "dhruvit@gmail.com";
+        String rawPassword = "wrongPassword";
+
+        User user = new User();
+        user.setId(1L);
+        user.setName("Dhruvit");
+        user.setEmail(email);
+        user.setPassword("$2a$12$mockedHash");
+
+        when(userRepository.findByEmail(email))
+                .thenReturn(Optional.of(user));
+
+        when(passwordEncoder.matches(
+                rawPassword,
+                user.getPassword()
+        )).thenReturn(false);
+
+        // Act + Assert
+        RuntimeException exception = assertThrows(
+                RuntimeException.class,
+                () -> authService.loginUser(email, rawPassword)
+        );
+
+        assertEquals(
+                "Invalid email or password",
+                exception.getMessage()
+        );
+
+        // Verify interactions
+        verify(userRepository).findByEmail(email);
+
+        verify(passwordEncoder).matches(
+                rawPassword,
+                user.getPassword()
+        );
+
+        verify(userRepository, never())
+                .save(any(User.class));
+    }
+
 }
