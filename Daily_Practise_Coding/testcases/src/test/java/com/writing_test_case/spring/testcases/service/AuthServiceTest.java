@@ -3,6 +3,7 @@ package com.writing_test_case.spring.testcases.service;
 import com.writing_test_case.spring.testcases.dto.RegisterRequest;
 import com.writing_test_case.spring.testcases.entity.User;
 import com.writing_test_case.spring.testcases.repository.UserRepository;
+import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -262,6 +263,15 @@ public class AuthServiceTest {
 
         verify(userRepository, never())
                 .save(any(User.class));
+    }
+
+    @Mock
+    private HttpSession session;
+
+    @Test
+    void logout_shouldInvalidateSession(){
+        authService.logout(session);
+        verify(session,times(1)).invalidate();
     }
 
 }

@@ -3,6 +3,7 @@ package com.writing_test_case.spring.testcases.service;
 import com.writing_test_case.spring.testcases.dto.RegisterRequest;
 import com.writing_test_case.spring.testcases.entity.User;
 import com.writing_test_case.spring.testcases.repository.UserRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -46,4 +47,10 @@ public class AuthService {
 
         return User;
     }
+
+    public void logout(HttpSession session){
+        session.invalidate();
+    }
+
+
 }
